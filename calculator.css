@@ -1,0 +1,43 @@
+table {
+    border: 1px solid #8e8e8e;
+    border-radius: 4px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #8e8e8e;
+}
+tr:nth-child(1) td {
+    border-bottom: none;
+}
+tr:nth-child(2) td {
+    border-top: none;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+td:last-child {
+    border-right: none;
+}
+td {
+    width: 40px;
+    height: 50px;
+    font-size: 20px;
+    text-align: center;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #8e8e8e;
+    border-right: 1px solid #8e8e8e;
+}
+.operator {
+    background-color: #e89650;
+    color: #ffffff;
+}
+#formulaDisplay {
+    height: 40px;
+    background-color: #413c3c;
+    text-align: right;
+}
+#resultDisplay {
+    height: 40px;
+    background-color: #413c3c;
+    text-align: right;
+}
