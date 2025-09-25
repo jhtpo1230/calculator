@@ -4,6 +4,7 @@
         <title>계산기</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="calculator.css" />
+        <script src = "calculator.js" defer></script>
     </head>
     <body>
         <table>
@@ -16,28 +17,28 @@
             <tr>
                 <td id="btnBackspace">&lt;</td>
                 <td colspan="2" id="btnReset">AC</td>
-                <td class="operator" id="btnDivide">&divide;</td>
+                <td class="btnOperator" id="btnDivide">&divide;</td>
             </tr>
             <tr>
-                <td id="btnSeven">7</td>
-                <td id="btnEight">8</td>
-                <td id="btnNine">9</td>
-                <td class="operator" id="btnMultiple">&times;</td>
+                <td class="btnNumber" id="btnSeven">7</td>
+                <td class="btnNumber" id="btnEight">8</td>
+                <td class="btnNumber" id="btnNine">9</td>
+                <td class="btnOperator" id="btnMultiple">&times;</td>
             </tr>
             <tr>
-                <td id="btnFour">4</td>
-                <td id="btnFive">5</td>
-                <td id="btnSix">6</td>
-                <td class="operator" id="btnMinus">-</td>
+                <td class="btnNumber" id="btnFour">4</td>
+                <td class="btnNumber" id="btnFive">5</td>
+                <td class="btnNumber" id="btnSix">6</td>
+                <td class="btnOperator" id="btnMinus">-</td>
             </tr>
             <tr>
-                <td id="btnOne">1</td>
-                <td id="btnTwo">2</td>
-                <td id="btnThree">3</td>
-                <td class="operator" id="btnPlus">+</td>
+                <td class="btnNumber" id="btnOne">1</td>
+                <td class="btnNumber" id="btnTwo">2</td>
+                <td class="btnNumber" id="btnThree">3</td>
+                <td class="btnOperator" id="btnPlus">+</td>
             </tr>
             <tr>
-                <td colspan="2" id="btnZero">0</td>
+                <td colspan="2" class="btnNumber" id="btnZero">0</td>
                 <td id="btnDecimalPoint">.</td>
                 <td class="operator" id="btnEqual">=</td>
             </tr>

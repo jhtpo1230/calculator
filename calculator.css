@@ -27,17 +27,20 @@ td {
     border-bottom: 1px solid #8e8e8e;
     border-right: 1px solid #8e8e8e;
 }
-.operator {
+.btnOperator,.operator {
     background-color: #e89650;
     color: #ffffff;
 }
+
 #formulaDisplay {
     height: 40px;
     background-color: #413c3c;
     text-align: right;
+    color: #ffffff;
 }
 #resultDisplay {
     height: 40px;
     background-color: #413c3c;
     text-align: right;
+    color: #ffffff;
 }
