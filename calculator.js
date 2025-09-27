@@ -1,6 +1,7 @@
 const formularDisplay = document.getElementById("formulaDisplay");
 const resultDisplay = document.getElementById("resultDisplay");
-const operatorSet = new Set(["+", "-", "÷", "×"]);
+
+const operatorSet = new Set(["+", "-", "÷", "×", "*", "/"]);
 let formula = "";
 
 // 소수점(.) 버튼 클릭 시 앞에 소수점 존재 여부 확인
@@ -47,7 +48,6 @@ btnNumber.forEach((button) => {
             formularDisplay.textContent += clickedNum;
             formula += clickedNum;
         }
-
     });
 });
 // 연산자 버튼 클릭 시 formularDisplay 표시
@@ -97,4 +97,86 @@ btnDecimalPoint.addEventListener("click", () => {
     } else {
         return;
     }
+});
+
+// 키보드 입력
+document.addEventListener('keydown', (event) => {
+    const keyboardInput = event.key;
+    if (keyboardInput === ' ') return;
+
+    // 숫자 키 (0~9)
+    if (!isNaN(keyboardInput)) {
+        const clickedNum = keyboardInput;
+        if (formula == "0") {
+            formularDisplay.textContent = clickedNum;
+            formula = clickedNum;
+        }
+        else if (operatorBehindZeroCheck() && decimalPointIsExist()) {
+            formularDisplay.textContent += clickedNum;
+            formula += clickedNum;
+        }
+        else if (operatorBehindZeroCheck()) {
+            formularDisplay.textContent = formularDisplay.textContent.slice(0, -1) + clickedNum;
+            formula = formula.slice(0, -1) + clickedNum;
+        }
+        else {
+            formularDisplay.textContent += clickedNum;
+            formula += clickedNum;
+        }
+    }
+
+    // 연산자 키
+    else if (operatorSet.has(keyboardInput)) {
+        const keyMap = {
+            "+": "+",
+            "-": "-",
+            '*': '×',
+            '/': '÷'
+        };
+        const clickedOperator = keyMap[keyboardInput];
+
+        let lastChar =
+            formularDisplay.textContent[formularDisplay.textContent.length - 1];
+        if (operatorSet.has(lastChar) || lastChar == undefined) return;
+        else if (lastChar == ".") { // 소수점 다음 숫자 x + 연산자
+            formularDisplay.textContent += "0" + clickedOperator;
+            formula += "0" + clickedOperator;
+        } else {
+            formularDisplay.textContent += clickedOperator;
+            formula += clickedOperator;
+        }
+    }
+    // 소수점
+    else if (keyboardInput === '.') {
+        let lastChar =
+            formularDisplay.textContent[formularDisplay.textContent.length - 1];
+        if (formula == "" || lastChar == ".") { return; }
+        else if (operatorSet.has(lastChar)) { // 마지막 문자가 연산자
+            formularDisplay.textContent += "0.";
+            formula += "0."
+        } // 마지막 문자가 숫자 + 그 뒤로 소수점 x
+        else if (!operatorSet.has(lastChar) && decimalPointIsExist() == false) {
+            formularDisplay.textContent += ".";
+            formula += "."
+        } else {
+            return;
+        }
+    }
+    // 지우기
+    else if (keyboardInput === 'Backspace' || keyboardInput === 'Escape') {
+        const clickedErase = keyboardInput;
+        if (clickedErase == "Escape") {
+            formularDisplay.textContent = "";
+            formula = "";
+        } else {
+            formularDisplay.textContent = formularDisplay.textContent.slice(0, -1);
+            formula = formula.slice(0, -1);
+        }
+    }
+
+    // 엔터(=) 키
+    else if (keyboardInput === 'Enter') {
+
+    }
+
 });
