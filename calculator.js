@@ -15,13 +15,39 @@ function decimalPointIsExist() {
     let pointExist = str.includes(".") ? true : false;
     return pointExist;
 }
+function operatorBehindZeroCheck() {
+    let str = "";
+
+    for (let index = formula.length - 1; index >= 0; index--) {
+        const char = formula[index];
+        if (operatorSet.has(char)) break;
+        else str += char;
+    }
+    let firstZeroExist = (str[str.length - 1] == "0") ? true : false;
+    return firstZeroExist;
+}
 // 숫자 버튼 클릭 시 formularDisplay 표시
 const btnNumber = document.querySelectorAll(".btnNumber");
 btnNumber.forEach((button) => {
     button.addEventListener("click", () => {
         const clickedNum = button.textContent;
-        formularDisplay.textContent += clickedNum;
-        formula += clickedNum;
+        if (formula == "0") {
+            formularDisplay.textContent = clickedNum;
+            formula = clickedNum;
+        }
+        else if (operatorBehindZeroCheck() && decimalPointIsExist()) {
+            formularDisplay.textContent += clickedNum;
+            formula += clickedNum;
+        }
+        else if (operatorBehindZeroCheck()) {
+            formularDisplay.textContent = formularDisplay.textContent.slice(0, -1) + clickedNum;
+            formula = formula.slice(0, -1) + clickedNum;
+        }
+        else {
+            formularDisplay.textContent += clickedNum;
+            formula += clickedNum;
+        }
+
     });
 });
 // 연산자 버튼 클릭 시 formularDisplay 표시
