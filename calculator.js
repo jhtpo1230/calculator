@@ -69,16 +69,24 @@ function calculate() {
         }
     }
     //곱셈과 나눗셈 연산이 끝난 뒤 push
-    for (let index = operatorIndex; index < tokens.length; index++) {
-        onlyPlusMinus.push(tokens[index]);
-    }
-    let result = onlyPlusMinus[0];
-    for (let index = 1; index < onlyPlusMinus.length; index += 2) {
-        result = operator(
-            result,
-            onlyPlusMinus[index],
-            onlyPlusMinus[index + 1]
-        );
+    let result = 0;
+    if (onlyPlusMinus.length == 0) {
+        result = tokens[0];
+        for (let index = 1; index < tokens.length; index += 2) {
+            result = operator(result, tokens[index], tokens[index + 1]);
+        }
+    } else {
+        for (let index = operatorIndex; index < tokens.length; index++) {
+            onlyPlusMinus.push(tokens[index]);
+        }
+        result = onlyPlusMinus[0];
+        for (let index = 1; index < onlyPlusMinus.length; index += 2) {
+            result = operator(
+                result,
+                onlyPlusMinus[index],
+                onlyPlusMinus[index + 1]
+            );
+        }
     }
     resultDisplay.textContent = result;
 }
@@ -135,10 +143,12 @@ btnOperator.forEach((button) => {
         let lastChar =
             formularDisplay.textContent[formularDisplay.textContent.length - 1];
 
-        // if (resultDisplay.textContent != "") {
-        //     formularDisplay.textContent = resultDisplay.textContent;
-        //     formula = formularDisplay.textContent;
-        // }
+        if (resultDisplay.textContent != "") {
+            formularDisplay.textContent = resultDisplay.textContent;
+            formula = formularDisplay.textContent;
+            resultDisplay.textContent = "";
+        }
+
         if (operatorSet.has(lastChar) || lastChar == undefined) return;
         else if (lastChar == ".") {
             // 소수점 다음 숫자 x + 연산자
@@ -150,6 +160,12 @@ btnOperator.forEach((button) => {
         }
     });
 });
+// 등호
+const printResultDisplay = document.getElementById("btnEqual");
+printResultDisplay.addEventListener("click", () => {
+    calculate();
+});
+
 //
 const btnErase = document.querySelectorAll(".btnErase");
 btnErase.forEach((button) => {
@@ -160,11 +176,17 @@ btnErase.forEach((button) => {
             formula = "";
             resultDisplay.textContent = "";
         } else {
-            formularDisplay.textContent = formularDisplay.textContent.slice(
-                0,
-                -1
-            );
-            formula = formula.slice(0, -1);
+            if (resultDisplay.textContent !== "") {
+                formularDisplay.textContent = "";
+                formula = "";
+                resultDisplay.textContent = "";
+            } else {
+                formularDisplay.textContent = formularDisplay.textContent.slice(
+                    0,
+                    -1
+                );
+                formula = formula.slice(0, -1);
+            }
         }
     });
 });
