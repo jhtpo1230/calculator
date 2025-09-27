@@ -51,17 +51,21 @@ td {
     color: #ffffff;
 }
 
-#formulaDisplay {
+#formularDisplay {
     /* height: 40px; */
     height: 92px;
+    font-size: 30px;
     background-color: #413c3c;
     text-align: right;
     color: #ffffff;
+    white-space: nowrap;    /* 줄바꿈 방지 */
 }
 #resultDisplay {
     /* height: 40px; */
     height: 92px;
+    font-size: 50px;
     background-color: #413c3c;
     text-align: right;
     color: #ffffff;
+    white-space: nowrap;    /* 줄바꿈 방지 */
 }
