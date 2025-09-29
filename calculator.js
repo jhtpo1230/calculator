@@ -47,7 +47,7 @@ function calculate(num1, op, num2) {
         case "×":
             return num1 * num2;
         case "÷":
-            if (num2 == 0) {
+            if (num2 === 0) {
                 alert("0으로 나눌 수 없습니다.");
             }
             return num1 / num2;
@@ -73,10 +73,10 @@ function clickedEqualLogic() {
     let finalFormular = [];
     let operatorIndex = 1;
     while (formularTokens.includes("×") || formularTokens.includes("÷")) {
-        if (operatorIndex == 1) {
+        if (operatorIndex === 1) {
             if (
-                formularTokens[operatorIndex] == "×" ||
-                formularTokens[operatorIndex] == "÷"
+                formularTokens[operatorIndex] === "×" ||
+                formularTokens[operatorIndex] === "÷"
             ) {
                 let firstOperatorResult = calculate(
                     formularTokens[0],
@@ -94,8 +94,8 @@ function clickedEqualLogic() {
             }
         } else {
             if (
-                formularTokens[operatorIndex] == "×" ||
-                formularTokens[operatorIndex] == "÷"
+                formularTokens[operatorIndex] === "×" ||
+                formularTokens[operatorIndex] === "÷"
             ) {
                 let multiplicativeResult = calculate(
                     finalFormular[finalFormular.length - 1],
@@ -115,7 +115,7 @@ function clickedEqualLogic() {
     }
 
     let result = 0;
-    if (finalFormular.length == 0) {
+    if (finalFormular.length === 0) {
         result = formularTokens[0];
         for (let index = 1; index < formularTokens.length; index += 2) {
             result = calculate(
@@ -141,8 +141,14 @@ function clickedEqualLogic() {
             );
         }
     }
-    resultDisplay.textContent = result;
-    resultResizeFont();
+    if (Number(result) === Infinity || isNaN(result)) {
+        formularDisplay.textContent = "";
+        formular = "";
+        resultDisplay.textContent = "";
+    } else {
+        resultDisplay.textContent = result;
+        resultResizeFont();
+    }
 }
 
 function decimalPointIsExist() {
@@ -201,21 +207,22 @@ function clickedOperatorLogic(clickedOperator) {
     let lastChar =
         formularDisplay.textContent[formularDisplay.textContent.length - 1];
 
-    if (resultDisplay.textContent != "") {
-        formularDisplay.textContent = resultDisplay.textContent;
+    if (resultDisplay.textContent !== "") {
+        formularDisplay.textContent =
+            resultDisplay.textContent + clickedOperator;
         formularResizeFont();
         formular = formularDisplay.textContent;
         resultDisplay.textContent = "";
         return;
     }
-    if (formular == "" && clickedOperator == "-") {
+    if (formular === "" && clickedOperator === "-") {
         formularDisplay.textContent += clickedOperator;
         formular += clickedOperator;
         return;
     }
 
     if (operatorSet.has(lastChar) || lastChar == undefined) return;
-    else if (lastChar == ".") {
+    else if (lastChar === ".") {
         formularDisplay.textContent += "0" + clickedOperator;
         formularResizeFont();
         formular += "0" + clickedOperator;
@@ -238,7 +245,7 @@ function clickedDecimalPointLogic() {
         formularDisplay.textContent[formularDisplay.textContent.length - 1];
     if (lastChar == ".") {
         return;
-    } else if (formular == "" || operatorSet.has(lastChar)) {
+    } else if (formular === "" || operatorSet.has(lastChar)) {
         formularDisplay.textContent += "0.";
         formularResizeFont();
         formular += "0.";
@@ -256,7 +263,7 @@ btnDecimalPoint.addEventListener("click", () => {
 });
 
 function clickedEraseLogic(clickedErase) {
-    if (clickedErase == "AC" || clickedErase == "Escape") {
+    if (clickedErase === "AC" || clickedErase === "Escape") {
         formularDisplay.textContent = "";
         formular = "";
         resultDisplay.textContent = "";
