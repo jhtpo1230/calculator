@@ -1,17 +1,10 @@
 table {
-    /* 사이즈 수정 */
     width: 412px;
     height: 784px;
     min-width: 412px;
     max-width: 412px;
     min-height: 784px;
     max-height: 784px;
-    /* width: 200px;
-    height: 350px;
-    min-width: 200px;
-    max-width: 200px;
-    min-height: 350px;
-    max-height: 350px; */
     table-layout: fixed;
 
     border: 1px solid #8e8e8e;
@@ -34,9 +27,6 @@ td:last-child {
     border-right: none;
 }
 td {
-    /* width: 40px;
-    height: 50px;
-    font-size: 20px; */
     width: 103px;
     height: 120px;
     font-size: 50px;
@@ -46,26 +36,24 @@ td {
     border-right: 1px solid #8e8e8e;
 }
 .btnOperator,
-.operator {
+#btnEqual {
     background-color: #e89650;
     color: #ffffff;
 }
 
 #formularDisplay {
-    /* height: 40px; */
     height: 92px;
     font-size: 30px;
     background-color: #413c3c;
     text-align: right;
     color: #ffffff;
-    white-space: nowrap;    /* 줄바꿈 방지 */
+    white-space: nowrap;
 }
 #resultDisplay {
-    /* height: 40px; */
     height: 92px;
     font-size: 50px;
     background-color: #413c3c;
     text-align: right;
     color: #ffffff;
-    white-space: nowrap;    /* 줄바꿈 방지 */
+    white-space: nowrap;
 }
