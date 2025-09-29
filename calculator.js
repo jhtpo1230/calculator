@@ -8,8 +8,9 @@ const operatorMap = {
     "*": "×",
     "/": "÷",
 };
+let formular = "";
 
-function resizeFont() {
+function formularResizeFont() {
     let maxWidth = formularDisplay.clientWidth;
     let fontSize = 30; // 시작 폰트 크기
     let minFontSize = 20;
@@ -20,13 +21,13 @@ function resizeFont() {
         fontSize--;
         formularDisplay.style.fontSize = fontSize + "px";
     }
-    if(fontSize <= minFontSize) {
+    if (fontSize <= minFontSize) {
         alert("수식이 너무 깁니다!");
-        formula = "";
+        formular = "";
         formularDisplay.textContent = "";
     }
 }
-function resizeFont2() {
+function resultResizeFont() {
     let maxWidth = resultDisplay.clientWidth;
     let fontSize = 50; // 시작 폰트 크기
     let minFontSize = 30;
@@ -38,8 +39,6 @@ function resizeFont2() {
         resultDisplay.style.fontSize = fontSize + "px";
     }
 }
-
-let formula = "";
 
 function operator(num1, op, num2) {
     switch (op) {
@@ -56,9 +55,12 @@ function operator(num1, op, num2) {
             return num1 / num2;
     }
 }
+// calculate 음수 값을 받는 경우
+// 우리는 중간에 음수값을 받을 필요는 없음(괄호가 없기 때문)
+//
 
 function calculate() {
-    const finalFormula = formula;
+    const finalFormula = formular[0] == "-" ? "0" + formular : formular;
 
     // 숫자와 연산자를 분리12/3
     let tokens = finalFormula.match(/(\d+(\.\d+)?|[+-×÷])/g);
@@ -120,26 +122,28 @@ function calculate() {
         }
     }
     resultDisplay.textContent = result;
-    resizeFont2();
+    resultResizeFont();
 }
 
 // 소수점(.) 버튼 클릭 시 앞에 소수점 존재 여부 확인
 function decimalPointIsExist() {
     let str = "";
 
-    for (let index = formula.length - 1; index >= 0; index--) {
-        const char = formula[index];
+    for (let index = formular.length - 1; index >= 0; index--) {
+        const char = formular[index];
         if (operatorSet.has(char)) break;
         else str += char;
     }
     let pointExist = str.includes(".") ? true : false;
     return pointExist;
 }
-function operatorBehindZeroCheck() {
+
+//operatorBehindZeroCheck->operatorBehindIsZeroExist
+function operatorBehindIsZeroExist() {
     let str = "";
 
-    for (let index = formula.length - 1; index >= 0; index--) {
-        const char = formula[index];
+    for (let index = formular.length - 1; index >= 0; index--) {
+        const char = formular[index];
         if (operatorSet.has(char)) break;
         else str += char;
     }
@@ -147,110 +151,132 @@ function operatorBehindZeroCheck() {
     return firstZeroExist;
 }
 // 숫자 버튼 클릭 시 formularDisplay 표시
-function btnNumberLogic(clickedNum) {
-    if (formula == "0") {
+function clickedNumberLogic(clickedNum) {
+    if (formular == "0") {
         formularDisplay.textContent = clickedNum;
-        resizeFont()
-        formula = clickedNum;
-    } else if (operatorBehindZeroCheck() && decimalPointIsExist()) {
+        formularResizeFont();
+        formular = clickedNum;
+    } else if (operatorBehindIsZeroExist() && decimalPointIsExist()) {
         formularDisplay.textContent += clickedNum;
-        resizeFont()
-        formula += clickedNum;
-    } else if (operatorBehindZeroCheck()) {
+        formularResizeFont();
+        formular += clickedNum;
+    } else if (operatorBehindIsZeroExist()) {
         formularDisplay.textContent =
             formularDisplay.textContent.slice(0, -1) + clickedNum;
-        resizeFont()
-        formula = formula.slice(0, -1) + clickedNum;
+        formularResizeFont();
+        formular = formular.slice(0, -1) + clickedNum;
     } else {
         formularDisplay.textContent += clickedNum;
-        resizeFont()
-        formula += clickedNum;
+        formularResizeFont();
+        formular += clickedNum;
     }
 }
 const btnNumber = document.querySelectorAll(".btnNumber");
 btnNumber.forEach((button) => {
     button.addEventListener("click", () => {
         const clickedNum = button.textContent;
-        btnNumberLogic(clickedNum);
+        clickedNumberLogic(clickedNum);
     });
 });
+
 // 연산자 버튼 클릭 시 formularDisplay 표시
+function clickedOperatorLogic(clickedOperator) {
+    let lastChar =
+        formularDisplay.textContent[formularDisplay.textContent.length - 1];
+
+    if (resultDisplay.textContent != "") {
+        formularDisplay.textContent = resultDisplay.textContent;
+        formularResizeFont();
+        formular = formularDisplay.textContent;
+        resultDisplay.textContent = "";
+        console.log("연산 재시작");
+    }
+    //첫번째에 -는 가능하게
+    if (formular == "" && clickedOperator == "-") {
+        formularDisplay.textContent += clickedOperator;
+        formular += clickedOperator;
+    }
+
+    if (operatorSet.has(lastChar) || lastChar == undefined) return;
+    else if (lastChar == ".") {
+        // 소수점 다음 숫자 x + 연산자
+        formularDisplay.textContent += "0" + clickedOperator;
+        formularResizeFont();
+        formular += "0" + clickedOperator;
+    } else {
+        formularDisplay.textContent += clickedOperator;
+        formularResizeFont();
+        formular += clickedOperator;
+    }
+}
+
 const btnOperator = document.querySelectorAll(".btnOperator");
 btnOperator.forEach((button) => {
     button.addEventListener("click", () => {
         const clickedOperator = button.textContent;
-        let lastChar =
-            formularDisplay.textContent[formularDisplay.textContent.length - 1];
-
-        if (resultDisplay.textContent != "") {
-            formularDisplay.textContent = resultDisplay.textContent;
-            resizeFont()
-            formula = formularDisplay.textContent;
-            resultDisplay.textContent = "";
-        }
-
-        if (operatorSet.has(lastChar) || lastChar == undefined) return;
-        else if (lastChar == ".") {
-            // 소수점 다음 숫자 x + 연산자
-            formularDisplay.textContent += "0" + clickedOperator;
-            resizeFont()
-            formula += "0" + clickedOperator;
-        } else {
-            formularDisplay.textContent += clickedOperator;
-            resizeFont()
-            formula += clickedOperator;
-        }
+        clickedOperatorLogic(clickedOperator);
     });
 });
-// =
-const printResultDisplay = document.getElementById("btnEqual");
-printResultDisplay.addEventListener("click", () => {
-    calculate();
+
+//소수점
+function clickedDecimalPointLogic() {
+    let lastChar =
+        formularDisplay.textContent[formularDisplay.textContent.length - 1];
+    if (lastChar == ".") {
+        return;
+    } else if (formular == "" || operatorSet.has(lastChar)) {
+        // 마지막 문자가 연산자
+        formularDisplay.textContent += "0.";
+        formularResizeFont();
+        formular += "0.";
+    } // 마지막 문자가 숫자 + 그 뒤로 소수점 x
+    else if (!operatorSet.has(lastChar) && decimalPointIsExist() == false) {
+        formularDisplay.textContent += ".";
+        formularResizeFont();
+        formular += ".";
+    } else {
+        return;
+    }
+}
+
+const btnDecimalPoint = document.getElementById("btnDecimalPoint");
+btnDecimalPoint.addEventListener("click", () => {
+    clickedDecimalPointLogic();
 });
+
+//지우기 로직
+function clickedEraseLogic(clickedErase) {
+    if (clickedErase == "AC" || clickedErase == "Escape") {
+        formularDisplay.textContent = "";
+        formular = "";
+        resultDisplay.textContent = "";
+    } else {
+        if (resultDisplay.textContent !== "") {
+            formularDisplay.textContent = "";
+            formular = "";
+            resultDisplay.textContent = "";
+        } else {
+            formularDisplay.textContent = formularDisplay.textContent.slice(
+                0,
+                -1
+            );
+            formular = formular.slice(0, -1);
+        }
+    }
+}
 
 const btnErase = document.querySelectorAll(".btnErase");
 btnErase.forEach((button) => {
     button.addEventListener("click", () => {
         const clickedErase = button.textContent;
-        if (clickedErase == "AC") {
-            formularDisplay.textContent = "";
-            formula = "";
-            resultDisplay.textContent = "";
-        } else {
-            if (resultDisplay.textContent !== "") {
-                formularDisplay.textContent = "";
-                formula = "";
-                resultDisplay.textContent = "";
-            } else {
-                formularDisplay.textContent = formularDisplay.textContent.slice(
-                    0,
-                    -1
-                );
-                formula = formula.slice(0, -1);
-            }
-        }
+        clickedEraseLogic(clickedErase);
     });
 });
 
-const btnDecimalPoint = document.getElementById("btnDecimalPoint");
-btnDecimalPoint.addEventListener("click", () => {
-    let lastChar =
-        formularDisplay.textContent[formularDisplay.textContent.length - 1];
-    if (formula == "" || lastChar == ".") {
-        return;
-    } else if (operatorSet.has(lastChar)) {
-        // 마지막 문자가 연산자
-        formularDisplay.textContent += "0.";
-        resizeFont()
-        formula += "0.";
-    } // 마지막 문자가 숫자 + 그 뒤로 소수점 x
-    else if (!operatorSet.has(lastChar) && decimalPointIsExist() == false) {
-        formularDisplay.textContent += ".";
-        resizeFont()
-        formula += ".";
-    } else {
-        return;
-    }
+// =
+const printResultDisplay = document.getElementById("btnEqual");
+printResultDisplay.addEventListener("click", () => {
+    calculate();
 });
 
 // 키보드 입력
@@ -261,69 +287,22 @@ document.addEventListener("keydown", (event) => {
     // 숫자 키 (0~9)
     if (!isNaN(keyboardInput)) {
         const clickedNum = keyboardInput;
-        btnNumberLogic(clickedNum);
+        clickedNumberLogic(clickedNum);
     }
 
     // 연산자 키
     else if (operatorSet.has(keyboardInput)) {
         const clickedOperator = operatorMap[keyboardInput];
-
-        let lastChar =
-            formularDisplay.textContent[formularDisplay.textContent.length - 1];
-
-        if (resultDisplay.textContent != "") {
-            formularDisplay.textContent = resultDisplay.textContent;
-            resizeFont()
-            formula = formularDisplay.textContent;
-            resultDisplay.textContent = "";
-        }
-
-        if (operatorSet.has(lastChar) || lastChar == undefined) return;
-        else if (lastChar == ".") {
-            // 소수점 다음 숫자 x + 연산자
-            formularDisplay.textContent += "0" + clickedOperator;
-            resizeFont()
-            formula += "0" + clickedOperator;
-        } else {
-            formularDisplay.textContent += clickedOperator;
-            resizeFont()
-            formula += clickedOperator;
-        }
+        clickedOperatorLogic(clickedOperator);
     }
     // 소수점
     else if (keyboardInput === ".") {
-        let lastChar =
-            formularDisplay.textContent[formularDisplay.textContent.length - 1];
-        if (formula == "" || lastChar == ".") {
-            return;
-        } else if (operatorSet.has(lastChar)) {
-            // 마지막 문자가 연산자
-            formularDisplay.textContent += "0.";
-            resizeFont()
-            formula += "0.";
-        } // 마지막 문자가 숫자 + 그 뒤로 소수점 x
-        else if (!operatorSet.has(lastChar) && decimalPointIsExist() == false) {
-            formularDisplay.textContent += ".";
-            resizeFont()
-            formula += ".";
-        } else {
-            return;
-        }
+        clickedDecimalPointLogic();
     }
     // 지우기
     else if (keyboardInput === "Backspace" || keyboardInput === "Escape") {
         const clickedErase = keyboardInput;
-        if (clickedErase == "Escape") {
-            formularDisplay.textContent = "";
-            formula = "";
-            resultDisplay.textContent = "";
-        } else {
-            formularDisplay.textContent = formularDisplay.textContent.slice(
-                0,
-                -1
-            );
-            formula = formula.slice(0, -1);
-        }
+        clickedEraseLogic(clickedErase);
     }
 
     // 엔터(=) 키
